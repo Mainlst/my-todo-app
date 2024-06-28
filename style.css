@@ -77,3 +77,53 @@ li input[type="text"], li input[type="date"] {
   background: transparent;
   font-size: 1em;
 }
+
+/* カレンダーのスタイル */
+.calendar {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 300px;
+  margin-top: 20px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ccc;
+}
+
+.calendar-header button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.calendar-body {
+  padding: 10px;
+}
+
+.day-names {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+.days {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.days div {
+  width: 14.28%;
+  text-align: center;
+  padding: 10px 0;
+  box-sizing: border-box;
+}
+
+.days div:nth-child(7n+1) {
+  color: red;
+}
