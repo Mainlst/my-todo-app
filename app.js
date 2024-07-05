@@ -16,12 +16,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const taskSpan = document.createElement('input');
         taskSpan.type = 'text';
         taskSpan.value = taskText;
-        taskSpan.addEventListener('change', saveTasks);
+        taskSpan.addEventListener('change', () => {
+            saveTasks();
+            sortTasks();
+        });
 
         const deadlineSpan = document.createElement('input');
         deadlineSpan.type = 'date';
         deadlineSpan.value = deadline;
-        deadlineSpan.addEventListener('change', saveTasks);
+        deadlineSpan.addEventListener('change', () => {
+            saveTasks();
+            sortTasks();
+        });
 
         const deleteButton = document.createElement('button');
         deleteButton.textContent = '削除';
@@ -42,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 taskList.appendChild(li);
             }
             saveTasks();
+            sortTasks();
         });
 
         deleteButton.addEventListener('click', () => {
@@ -54,6 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             taskList.appendChild(li);
         }
+
+        sortTasks();
     }
 
     function saveTasks() {

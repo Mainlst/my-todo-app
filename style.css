@@ -131,3 +131,10 @@ li input[type="text"], li input[type="date"] {
 .days div:nth-child(7n) {
   color: blue;
 }
+
+.highlight {
+  background-color: green;
+  color: white; /* 文字色を白にする */
+  border-radius: 4px; /* 四角形を保持しつつ、少し角を丸める */
+  padding: 5px;
+}
