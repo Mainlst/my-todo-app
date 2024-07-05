@@ -127,3 +127,7 @@ li input[type="text"], li input[type="date"] {
 .days div:nth-child(7n+1) {
   color: red;
 }
+
+.days div:nth-child(7n) {
+  color: blue;
+}
