@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToDoアプリ</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.png" type="image/png">
 </head>
 <body>
     <div id="app">
@@ -14,8 +15,14 @@
         <button id="addTaskButton">追加</button>
         <h2>未完了のタスク</h2>
         <ul id="taskList"></ul>
-        <h2>完了したタスク</h2>
-        <ul id="completedTaskList"></ul>
+        <h2>完了したタスク <button id="toggleCompletedTasks">表示</button></h2>
+        <div id="completedTasksWrapper" class="collapsed">
+            <ul id="completedTaskList"></ul>
+        </div>
+        <h2>ゴミ箱 <button id="toggleTrash">表示</button></h2>
+        <div id="trashWrapper" class="collapsed">
+            <ul id="trashList"></ul>
+        </div>
     </div>
     
     <div class="calendar">

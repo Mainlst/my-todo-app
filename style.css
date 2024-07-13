@@ -78,6 +78,10 @@ li input[type="text"], li input[type="date"] {
   font-size: 1em;
 }
 
+.collapsed {
+  display: none;
+}
+
 /* カレンダーのスタイル */
 .calendar {
   border: 1px solid #ccc;
@@ -100,6 +104,7 @@ li input[type="text"], li input[type="date"] {
   border: none;
   font-size: 16px;
   cursor: pointer;
+  background-color: #ccc;
 }
 
 .calendar-body {
