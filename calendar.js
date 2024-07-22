@@ -36,20 +36,20 @@ document.addEventListener('DOMContentLoaded', () => {
   
       for (let i = 1; i <= monthDays; i++) {
           const currentDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-          const isTaskDate = tasks.some(task => task.deadline === currentDate && !task.completed);
+          const task = tasks.find(task => task.deadline === currentDate && !task.completed);
   
           if (
               i === new Date().getDate() &&
               date.getMonth() === new Date().getMonth() &&
               date.getFullYear() === new Date().getFullYear()
           ) {
-              if (isTaskDate) {
-                  days += `<div class="highlight today">${i}</div>`;
+              if (task) {
+                  days += `<div class="highlight today" style="background-color: ${task.color}">${i}</div>`;
               } else {
                   days += `<div class="today">${i}</div>`;
               }
-          } else if (isTaskDate) {
-              days += `<div class="highlight">${i}</div>`;
+          } else if (task) {
+              days += `<div class="highlight" style="background-color: ${task.color}">${i}</div>`;
           } else {
               days += `<div>${i}</div>`;
           }

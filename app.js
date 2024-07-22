@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const taskInput = document.getElementById('taskInput');
     const deadlineInput = document.getElementById('deadlineInput');
+    const colorInput = document.getElementById('colorInput'); // 色選択メニュー
     const addTaskButton = document.getElementById('addTaskButton');
     const taskList = document.getElementById('taskList');
     const completedTaskList = document.getElementById('completedTaskList');
@@ -9,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const today = new Date().toISOString().split('T')[0];
     deadlineInput.value = today;
 
-    function addTask(taskText, deadline, completed = false) {
+    function addTask(taskText, deadline, completed = false, color = '#000000') {
         const li = document.createElement('li');
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
@@ -33,6 +34,14 @@ document.addEventListener('DOMContentLoaded', () => {
             renderCalendar(); // カレンダーの再描画
         });
 
+        const colorPicker = document.createElement('input');
+        colorPicker.type = 'color';
+        colorPicker.value = color;
+        colorPicker.addEventListener('change', () => {
+            saveTasks();
+            renderCalendar(); // カレンダーの再描画
+        });
+
         const deleteButton = document.createElement('button');
         deleteButton.textContent = '削除';
         deleteButton.addEventListener('click', () => {
@@ -49,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         li.appendChild(checkbox);
         li.appendChild(taskSpan);
         li.appendChild(deadlineSpan);
+        li.appendChild(colorPicker);
         if (completed) {
             li.appendChild(deleteButton);
         }
@@ -83,14 +93,16 @@ document.addEventListener('DOMContentLoaded', () => {
             tasks.push({
                 text: li.querySelector('input[type="text"]').value,
                 deadline: li.querySelector('input[type="date"]').value,
-                completed: false
+                completed: false,
+                color: li.querySelector('input[type="color"]').value // 色情報を保存
             });
         });
         completedTaskList.querySelectorAll('li').forEach(li => {
             tasks.push({
                 text: li.querySelector('input[type="text"]').value,
                 deadline: li.querySelector('input[type="date"]').value,
-                completed: true
+                completed: true,
+                color: li.querySelector('input[type="color"]').value // 色情報を保存
             });
         });
         localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -99,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadTasks() {
         const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
         tasks.forEach(task => {
-            addTask(task.text, task.deadline, task.completed);
+            addTask(task.text, task.deadline, task.completed, task.color);
         });
     }
 
@@ -116,10 +128,12 @@ document.addEventListener('DOMContentLoaded', () => {
     addTaskButton.addEventListener('click', () => {
         const taskText = taskInput.value.trim();
         const deadline = deadlineInput.value;
+        const color = colorInput.value; // 選択された色
         if (taskText !== '' && deadline !== '') {
-            addTask(taskText, deadline);
+            addTask(taskText, deadline, false, color);
             taskInput.value = '';
             deadlineInput.value = today;
+            colorInput.value = '#000000'; // 色選択をリセット
             saveTasks();
             sortTasks();
             renderCalendar(); // カレンダーの再描画
