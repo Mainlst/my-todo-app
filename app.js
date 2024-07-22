@@ -4,15 +4,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const addTaskButton = document.getElementById('addTaskButton');
     const taskList = document.getElementById('taskList');
     const completedTaskList = document.getElementById('completedTaskList');
-    const trashList = document.getElementById('trashList');
     const completedTasksWrapper = document.getElementById('completedTasksWrapper');
-    const trashWrapper = document.getElementById('trashWrapper');
     const toggleCompletedTasksButton = document.getElementById('toggleCompletedTasks');
-    const toggleTrashButton = document.getElementById('toggleTrash');
     const today = new Date().toISOString().split('T')[0];
     deadlineInput.value = today;
 
-    function addTask(taskText, deadline, completed = false, trashed = false) {
+    function addTask(taskText, deadline, completed = false) {
         const li = document.createElement('li');
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
@@ -39,50 +36,38 @@ document.addEventListener('DOMContentLoaded', () => {
         const deleteButton = document.createElement('button');
         deleteButton.textContent = '削除';
         deleteButton.addEventListener('click', () => {
-            if (trashed) {
-                li.remove();
-                saveTasks();
-                renderCalendar(); // カレンダーの再描画
-            } else {
-                li.remove();
-                trashTask(taskText, deadline, completed);
-                saveTasks();
-                renderCalendar(); // カレンダーの再描画
-            }
+            li.remove();
+            saveTasks();
+            renderCalendar(); // カレンダーの再描画
         });
 
         if (completed) {
             li.classList.add('completed');
+            li.appendChild(deleteButton);
         }
 
         li.appendChild(checkbox);
         li.appendChild(taskSpan);
         li.appendChild(deadlineSpan);
-        li.appendChild(deleteButton);
+        if (completed) {
+            li.appendChild(deleteButton);
+        }
+
         checkbox.addEventListener('change', () => {
             li.classList.toggle('completed');
             if (checkbox.checked) {
                 completedTaskList.appendChild(li);
+                li.appendChild(deleteButton);
             } else {
                 taskList.appendChild(li);
+                deleteButton.remove();
             }
             saveTasks();
             sortTasks();
             renderCalendar(); // カレンダーの再描画
         });
 
-        if (trashed) {
-            trashList.appendChild(li);
-            const restoreButton = document.createElement('button');
-            restoreButton.textContent = '復元';
-            restoreButton.addEventListener('click', () => {
-                li.remove();
-                addTask(taskText, deadline, completed);
-                saveTasks();
-                renderCalendar(); // カレンダーの再描画
-            });
-            li.appendChild(restoreButton);
-        } else if (completed) {
+        if (completed) {
             completedTaskList.appendChild(li);
         } else {
             taskList.appendChild(li);
@@ -92,34 +77,20 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCalendar(); // カレンダーの再描画
     }
 
-    function trashTask(taskText, deadline, completed) {
-        addTask(taskText, deadline, completed, true);
-    }
-
     function saveTasks() {
         const tasks = [];
         taskList.querySelectorAll('li').forEach(li => {
             tasks.push({
                 text: li.querySelector('input[type="text"]').value,
                 deadline: li.querySelector('input[type="date"]').value,
-                completed: false,
-                trashed: false
+                completed: false
             });
         });
         completedTaskList.querySelectorAll('li').forEach(li => {
             tasks.push({
                 text: li.querySelector('input[type="text"]').value,
                 deadline: li.querySelector('input[type="date"]').value,
-                completed: true,
-                trashed: false
-            });
-        });
-        trashList.querySelectorAll('li').forEach(li => {
-            tasks.push({
-                text: li.querySelector('input[type="text"]').value,
-                deadline: li.querySelector('input[type="date"]').value,
-                completed: li.querySelector('input[type="checkbox"]').checked,
-                trashed: true
+                completed: true
             });
         });
         localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -128,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadTasks() {
         const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
         tasks.forEach(task => {
-            addTask(task.text, task.deadline, task.completed, task.trashed);
+            addTask(task.text, task.deadline, task.completed);
         });
     }
 
@@ -170,11 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleCompletedTasksButton.addEventListener('click', () => {
         completedTasksWrapper.classList.toggle('collapsed');
         toggleCompletedTasksButton.textContent = completedTasksWrapper.classList.contains('collapsed') ? '表示' : '非表示';
-    });
-
-    toggleTrashButton.addEventListener('click', () => {
-        trashWrapper.classList.toggle('collapsed');
-        toggleTrashButton.textContent = trashWrapper.classList.contains('collapsed') ? '表示' : '非表示';
     });
 
     loadTasks();
